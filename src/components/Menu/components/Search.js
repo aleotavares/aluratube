@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components"
+import DarkModeSwitch from "./DarkModeSwitch";
 
 const StyledSearch = styled.div`
   display: flex;
@@ -50,6 +51,6 @@ export default function Search({ valorFiltro, setValorFiltro}) {
             <button>
                 🔎
             </button>
-        </StyledSearch>
+        </StyledSearch>        
     )
 }

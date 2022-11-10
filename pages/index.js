@@ -1,31 +1,22 @@
 import React from "react";
 import config from "../config.json";
-import styled from "styled-components";
-import { CSSReset } from "../src/components/CSSReset";
+import styled, { ThemeConsumer } from "styled-components";
 import Menu from "../src/components/Menu";
 import { StyledTimeline } from "../src/components/Timeline";
-//import Menu from "../src/components/Timeline";
 
 function HomePage() {
-
-    const estilosHP = { 
-        //backgroundColor: "red"
-    };
 
     const [valorFiltro,setValorFiltro] = React.useState("");
 
     // console.log(config.playlists);
 
     return (
-        <>
-            <CSSReset/>
-            <div style={estilosHP}>
-                {/* Prop Drilling */}
-                <Menu valorFiltro={valorFiltro} setValorFiltro={setValorFiltro} />
-                <Header />
-                <Timeline searchValue={valorFiltro} playlists={config.playlists} />
-            </div>
-        </>
+        <div>
+            {/* Prop Drilling */}
+            <Menu valorFiltro={valorFiltro} setValorFiltro={setValorFiltro} />
+            <Header />
+            <Timeline searchValue={valorFiltro} playlists={config.playlists} />
+        </div>
     )
 }
 
@@ -40,6 +31,9 @@ export default HomePage
 // }
 
 const StyledHeader = styled.div`
+  
+  background-color: ${({ theme }) => theme.backgroundLevel1};
+
   img {
         width: 80p;
         height: 80px;
