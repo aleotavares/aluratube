@@ -1,3 +1,4 @@
+import React from "react";
 import config from "../config.json";
 import styled from "styled-components";
 import { CSSReset } from "../src/components/CSSReset";
@@ -11,15 +12,18 @@ function HomePage() {
         //backgroundColor: "red"
     };
 
-    console.log(config.playlists);
+    const [valorFiltro,setValorFiltro] = React.useState("");
+
+    // console.log(config.playlists);
 
     return (
         <>
             <CSSReset/>
             <div style={estilosHP}>
-                <Menu/>
+                {/* Prop Drilling */}
+                <Menu valorFiltro={valorFiltro} setValorFiltro={setValorFiltro} />
                 <Header />
-                <Timeline playlists={config.playlists} />
+                <Timeline searchValue={valorFiltro} playlists={config.playlists} />
             </div>
         </>
     )
@@ -48,13 +52,19 @@ const StyledHeader = styled.div`
         width: 100%;
         padding: 16px 32px;
         gap: 16px;
-        margin-top: 50px;
     }
+`;
+
+const StyledBanner = styled.div`
+    height: 230px;
+    background-image: url(${({bg}) => bg});
+    /*background-image: url("${config.bg}");*/
 `;
 
 function Header() {
     return (
         <StyledHeader>
+            <StyledBanner bg={config.bg}/>
             {/*<img src="banner"/>*/}
             <section className="user-info">
                 <img src={`http://github.com/${config.gitbub}.png`} />
@@ -67,27 +77,38 @@ function Header() {
     )
 }
 
-function Timeline(props) {
+function Timeline({searchValue, ...props}) {
 
-    console.log("fnTimeline",props)
+    //console.log("fnTimeline",props)
     const playlistNames = Object.keys(props.playlists);
+
     // Statement - for
     // Retorno por expressao - foreach,map
     // Usar map ao inves de foreach
-    console.log("plNames",playlistNames)
+    //console.log("plNames",playlistNames)
     return (
         <StyledTimeline>
             {playlistNames.map((playlistName) => {
+                
                 const videos = props.playlists[playlistName];
-                console.log("playlistName",playlistName);
+                
+                //console.log("playlistName",playlistName);
+                
                 return (
-                    <section>
+                    <section key={playlistName}>
                         <h2>{playlistName}</h2>
                         <div>
-                            {videos.map((video)=>{
+                            {videos.filter((video) => {
+
+                                const videoNormalized = video.title.toLowerCase();
+                                const searchValueNormalized = searchValue.toLowerCase();
+
+                                return videoNormalized.includes(searchValueNormalized);
+                            
+                            }).map((video)=>{
                                 
                                 return(
-                                <a href={video.url}>
+                                <a key={video.url} href={video.url}>
                                     <img src={video.thumb} />
                                     <span>
                                         {video.title}
