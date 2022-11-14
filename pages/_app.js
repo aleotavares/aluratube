@@ -3,6 +3,7 @@ import { redirect } from "next/dist/server/api-utils";
 import { ThemeProvider } from "styled-components";
 import { CSSReset } from "../src/components/CSSReset";
 import ColorModeProvider, {ColorModeContext} from "../src/components/Menu/components/ColorMode";
+import RegisterVideo from "../src/components/RegisterVideo";
     
 const theme = {
     light: {
@@ -34,7 +35,7 @@ function ProviderWrapper(props){
     );
 }
 
-function MyApp({ Component, pageProps }) {
+function Root({ Component, pageProps }) {
 
     const contexto = React.useContext(ColorModeContext);
 
@@ -43,6 +44,7 @@ function MyApp({ Component, pageProps }) {
             <ThemeProvider theme={theme[contexto.mode]}>
                 <CSSReset/>
                 <Component {...pageProps} />
+                <RegisterVideo/>
             </ThemeProvider>
     )
 }
@@ -51,7 +53,7 @@ export default function App(props){
 
     return(
         <ProviderWrapper>
-            <MyApp {...props} />
+            <Root {...props} />
         </ProviderWrapper>
     );
 }
