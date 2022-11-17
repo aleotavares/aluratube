@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import React from "react";
 import { StyledRegisterVideo } from "./Styles";
+import { backendService } from "../../../src/services/backendService";
 
 //Custom Hook
 function useForm(propsForm){
@@ -37,10 +38,26 @@ const supabase = createClient(PROJECT_URL, API_KEY);
 
 export default function RegisterVideo() {
 
+    const service = backendService();
     const [formVisible, setFormVisible] = React.useState(false);
     const formCadastro = useForm({
         initialValues: { titulo: "", url: "" }
     });
+
+    React.useEffect(() => {
+
+        service.getAllPlaylists()
+            .then((result) => {
+
+                result.data.forEach((playlist) => {
+                    console.log(playlist.name);
+                });
+            })
+            .catch((error) => {
+
+            });
+
+    },[]);
 
     return (
         <StyledRegisterVideo>
@@ -79,6 +96,7 @@ export default function RegisterVideo() {
                             onClick={() => setFormVisible(false)}>
                             x
                         </button>
+                        
                         <input
                         name="titulo"
                             placeholder="Título do vídeo"
@@ -90,6 +108,21 @@ export default function RegisterVideo() {
                             placeholder="URL do vídeo"
                             value={formCadastro.values.url}
                             onChange={formCadastro.handleChange} />
+                        
+                        <div>
+                            Selecione uma playlist
+                            <select
+                                name="playlist"
+                                defaultValue=""
+                                placeholder="Playlist">
+                                <option selected disabled value=""></option>
+                                <option value="grapefruit">Grapefruit</option>
+                                <option value="lime">Lime</option>
+                                <option value="coconut">Coconut</option>
+                                <option value="mango">Mango</option>
+                            </select>
+                        </div>
+
                         <button type="submit">Cadastrar</button>
                     </div>
                 </form>

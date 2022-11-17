@@ -1,23 +1,30 @@
 import React from "react";
-import config from "../config.json";
-import styled, { ThemeConsumer } from "styled-components";
+//import config from "../config.json";
+//import styled, { ThemeConsumer } from "styled-components";
+import styled from "styled-components";
+import Header from "../src/components/Header";
 import Menu from "../src/components/Menu";
 import { StyledTimeline } from "../src/components/Timeline";
-import { videosService } from "../src/services/videosService";
+import { backendService } from "../src/services/backendService";
+//import { videosService } from "../src/services/videosService";
+//import { playlistsService } from "../src/services/playlistsService";
 
-function HomePage() {
+function HomePage({theme,...props}) {
 
-    const service = videosService();
+    console.log("homePage",theme)
+
+    const service = backendService();
     const [valorFiltro,setValorFiltro] = React.useState("");
     const [playlists,setPlaylists] = React.useState({});
 
     React.useEffect(() => {
 
-        service.getAllVideos().then((result) => {
+        service.getAllVideos()
+            .then((result) => {
 
-            //forma imutavel
-            const novasPlaylists = { ...playlists };
-            result.data.forEach((video) => {
+                //forma imutavel
+                const novasPlaylists = { ...playlists };
+                result.data.forEach((video) => {
 
                 //inicializa o array
                 if (!novasPlaylists[video.playlist]) novasPlaylists[video.playlist] = [];
@@ -31,71 +38,22 @@ function HomePage() {
         .catch((error) => {
 
         });
+
     },[]);//[] -> significa que não está sendo monitorado, uma variavel ou state pode ser usado para disparar novas chamadas
           // ausencia do [] faz virar um loop infinito
-
-    // console.log(config.playlists);
 
     return (
         <div>
             {/* Prop Drilling */}
             <Menu valorFiltro={valorFiltro} setValorFiltro={setValorFiltro} />
+            {/*  */}
             <Header />
             <Timeline searchValue={valorFiltro} playlists={playlists} />
         </div>
     )
 }
 
-export default HomePage
-
-// function Menu() {
-//     return (
-//         <div>
-//             Menu
-//         </div>
-//     )
-// }
-
-const StyledHeader = styled.div`
-  
-  background-color: ${({ theme }) => theme.backgroundLevel1};
-
-  img {
-        width: 80p;
-        height: 80px;
-        border-radius: 50%
-    }
-
-    .user-info{
-        display: flex;
-        align-items: center;
-        width: 100%;
-        padding: 16px 32px;
-        gap: 16px;
-    }
-`;
-
-const StyledBanner = styled.div`
-    height: 230px;
-    background-image: url(${({bg}) => bg});
-    /*background-image: url("${config.bg}");*/
-`;
-
-function Header() {
-    return (
-        <StyledHeader>
-            <StyledBanner bg={config.bg}/>
-            {/*<img src="banner"/>*/}
-            <section className="user-info">
-                <img src={`http://github.com/${config.gitbub}.png`} />
-                <div>
-                    <h2>{config.name}</h2>
-                    <p>{config.job}</p>
-                </div>
-            </section>
-        </StyledHeader>
-    )
-}
+export default HomePage;
 
 function Timeline({searchValue, ...props}) {
 
